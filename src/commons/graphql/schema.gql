@@ -1,0 +1,226 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CurrentRegion {
+  id: String!
+  region: String!
+  regionDetail: String
+}
+
+type User {
+  id: String!
+  name: String!
+  email: String!
+  myLang: String!
+  newLang: String!
+  image: String!
+  password: String!
+  points: Int!
+  boardCounts: Int!
+  communityBoardCounts: Int!
+  currentRegion: CurrentRegion!
+}
+
+type Board {
+  id: String!
+  content: String!
+  video: String!
+  likes: Int!
+  commentsCount: Int!
+  writer: User!
+  createdAt: DateTime!
+  deletedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Comment {
+  id: String!
+  content: String!
+  likes: Int!
+  image: String!
+  video: String!
+  writer: User!
+  board: Board!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  parentComment: Comment!
+}
+
+type CommunityBoard {
+  id: String!
+  title: String!
+  content: String!
+  createdAt: DateTime!
+  likes: Int!
+  image: String!
+  writer: User!
+}
+
+type BoardImage {
+  id: String!
+  image: String!
+  board: Board!
+}
+
+type Save {
+  id: String!
+  board: Board!
+  user: User!
+  isSaved: Boolean!
+  isLiked: Boolean!
+}
+
+type Receipt {
+  id: String!
+  impUid: String!
+  point: Int!
+  price: Int!
+  purchasedAt: DateTime!
+  user: User!
+  status: RECEIPT_STATUS_ENUM!
+}
+
+enum RECEIPT_STATUS_ENUM {
+  PURCHASED
+  CANCELLED
+}
+
+type LikeComment {
+  id: String!
+  isLiked: Boolean!
+  user: User!
+  comment: Comment!
+}
+
+type LikeCommunityBoard {
+  id: String!
+  isLiked: Boolean!
+  communityBoard: CommunityBoard!
+  user: User!
+}
+
+type Query {
+  fetchBoards(pageSize: Float, page: Float, userId: String): [Board!]!
+  fetchMyBoards: [Board!]!
+  fetchBoard(boardId: String!): Board!
+  fetchBoardsCount(UserId: String): Int!
+  fetchBoardImages: [BoardImage!]!
+  fetchBoardImage(board: String!): [BoardImage!]!
+  fetchUsers: [User!]!
+  fetchUser: User!
+  fetchUserId(userId: String!): User!
+  fetchCommunityBoards(pageSize: Float, page: Float, userId: String): [CommunityBoard!]!
+  fetchMyCommunityBoards: [CommunityBoard!]!
+  fetchCommunityBoard(communityBoardId: String!): CommunityBoard!
+  fetchComments(boardId: String!): [Comment!]!
+  fetchSavedBoards(userId: String!): [Save!]!
+  searchBoardContent(content: String!): [Board!]!
+  searchCommnunityContent(content: String!): [CommunityBoard!]!
+  fetchReceipts: [Receipt!]!
+  fetchMyReceipts: [Receipt!]!
+  fetchLikedCommunityBoard(userId: String): [LikeCommunityBoard!]!
+  fetchLikedComment(userId: String): [LikeComment!]!
+}
+
+type Mutation {
+  login(email: String!, password: String!): String!
+  restoreAccessToken: String!
+  logout: String!
+  createBoard(createBoardInput: CreateBoardInput!): Board!
+  updateBoard(boardId: String!, updateBoardInput: UpdateBoardInput!): Board!
+  deleteBoard(boardId: String!): Boolean!
+  createBoardImage(image: [String!]!, board: String!): [BoardImage!]!
+  updateBoardImage(image: [String!]!, board: Float!): [BoardImage!]!
+  deleteBoardImage(image: String!): Boolean!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(originalPassword: String!, updateUserInput: UpdateUserInput!): User!
+  deleteUser: Boolean!
+  emailCheck(email: String!): String!
+  verification(email: String!, token: String!): String!
+  createCommunityBoard(createCommunityBoardInput: CreateCommunityBoardInput!): CommunityBoard!
+  updateCommunityBoard(communityBoardId: String!, updateCommunityBoardInput: UpdateCommunityBoardInput!): CommunityBoard!
+  deleteCommunityBoard(communityBoardId: String!): Boolean!
+  createComment(createCommentInput: CreateCommentInput!, boardId: String!): Comment!
+  updateComment(updateCommentInput: UpdateCommentInput!, commentId: String!): Comment!
+  deleteComment(commentId: String!): Boolean!
+  createCurrentRegion(currentRegionInput: CurrentRegionInput!): CurrentRegion!
+  updateCurrentRegion(UpdateCurrentRegionInput: CurrentRegionInput!, currentRegionId: String!): CurrentRegion!
+  deleteCurrentRegion(currentRegionId: String!): Boolean!
+  uploadFile(files: [Upload!]!): [String!]!
+  deleteFile(files: String!): String!
+  saveBoard(boardId: String!): String!
+  likeBoard(boardId: String!): String!
+  createReceipt(impUid: String!, price: Float!): Receipt!
+  deleteReceipt(impUid: String!, price: Float!): Receipt!
+  likeCommunityBoard(communityBoardId: String!): String!
+  likeComment(commentId: String!): String!
+}
+
+input CreateBoardInput {
+  content: String!
+  video: String!
+}
+
+input UpdateBoardInput {
+  content: String
+  video: String
+}
+
+input CreateUserInput {
+  name: String!
+  image: String
+  email: String!
+  password: String!
+  myLang: String!
+  newLang: String!
+  currentRegion: String
+}
+
+input UpdateUserInput {
+  name: String
+  image: String
+  email: String
+  password: String
+  myLang: String
+  newLang: String
+  currentRegion: String
+}
+
+input CreateCommunityBoardInput {
+  title: String!
+  content: String!
+  image: String
+}
+
+input UpdateCommunityBoardInput {
+  title: String
+  content: String
+  image: String
+}
+
+input CreateCommentInput {
+  content: String!
+  image: String
+  video: String
+  parentCommentId: String
+}
+
+input UpdateCommentInput {
+  content: String
+  image: String
+  video: String
+  parentCommentId: String
+}
+
+input CurrentRegionInput {
+  region: String!
+  regionDetail: String!
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
