@@ -19,7 +19,7 @@ import { ReceiptModule } from './apis/receipt/receipt.module';
 import { LikeCommentModule } from './apis/likeComment/likeComment.module';
 import { CurrentRegionModule } from './apis/currentRegion/currentRegion.module';
 import { LikeCommunityBoardModule } from './apis/likeCommunityBoard/likeCommunity.module';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { UsePointModule } from './apis/usePoint/usePoint.module';
 
 @Module({
   imports: [
@@ -36,10 +36,15 @@ import { ElasticsearchModule } from '@nestjs/elasticsearch';
     ReceiptModule,
     LikeCommunityBoardModule,
     LikeCommentModule,
+    UsePointModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       cors: {
-        origin: 'http://localhost:3000',
+        origin: [
+          'http://langb.shop',
+          'https://langb.shop',
+          'http://localhost:3000',
+        ],
         credentials: true,
       },
       autoSchemaFile: 'src/commons/graphql/schema.gql',

@@ -44,6 +44,8 @@ export class UserService {
           <html>
               <body>
                   <h1 style="color: #434343">Welcome, ${createUserInput.name}!</h1>
+                  <img src="https://storage.googleapis.com/langbee/47.png" style="display: flex;
+                  flex-direction: column; align-items: center; width: 600px;"></img>
               </body>
           </html>
       `;
@@ -64,7 +66,7 @@ export class UserService {
       `https://api-mail.cloud.toast.com/email/v2.0/appKeys/${appKey}/sender/mail`,
       {
         senderAddress: sender,
-        title: 'Welcome to LangBee',
+        title: 'Welcome to LangBee!',
         body: template,
         receiverList: [
           {
@@ -88,17 +90,22 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { email: userEmail },
     });
-
-    const isAuth = await bcrypt.compare(originalPassword, user.password);
-
-    if (!isAuth)
-      throw new UnprocessableEntityException('암호가 일치하지 않습니다');
+    let isAuth;
+    if (user['password'].length > 4) {
+      isAuth = await bcrypt.compare(originalPassword, user.password);
+      if (!isAuth)
+        throw new UnprocessableEntityException('암호가 일치하지 않습니다');
+    }
 
     if (updateUserInput.password) {
       updateUserInput.password = await bcrypt.hash(
         updateUserInput.password,
         10,
       );
+    } else if (updateUserInput.password === '') {
+      updateUserInput.password = await bcrypt.hash(originalPassword, 10);
+    } else {
+      updateUserInput.password = await bcrypt.hash(originalPassword, 10);
     }
 
     const newUser = {

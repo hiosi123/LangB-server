@@ -18,10 +18,29 @@ export class LikeCommunityBoardService {
     private readonly likeCommunityBoardRepository: Repository<LikeCommunityBoard>,
   ) {}
 
-  async findAll({ currentUser, userId }) {
+  async findAll({ currentUser, boardId, userId }) {
+    if (boardId && userId) {
+      return await this.likeCommunityBoardRepository.find({
+        where: {
+          user: { id: userId },
+          communityBoard: { id: boardId },
+        },
+        relations: ['user', 'communityBoard'],
+      });
+    }
     if (userId) {
       return await this.likeCommunityBoardRepository.find({
-        where: { user: userId },
+        where: { user: { id: userId } },
+        relations: ['user', 'communityBoard'],
+      });
+    }
+
+    if (boardId) {
+      return await this.likeCommunityBoardRepository.find({
+        where: {
+          user: { id: currentUser.id },
+          communityBoard: { id: boardId },
+        },
         relations: ['user', 'communityBoard'],
       });
     }
