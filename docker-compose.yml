@@ -1,0 +1,24 @@
+version: "3.3"
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    environment:
+      discovery.type: single-node
+    ports:
+      - 9200:9200
+
+  logstash:
+    image: logstash:7.17.0
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash/mysql-connector-java-8.0.28.jar:/usr/share/logstash/mysql-connector-java-8.0.28.jar
+      - ./logstash/template.json:/usr/share/logstash/template.json
+
+  # kibana:
+  #   image: kibana:7.17.0
+  #   environment:
+  #     ELASTICSEARCH_UTL: http://34.64.220.170:9200
+  #     ELASTICSEARCH_HOSTS: http://34.64.220.170:9200
+  #   ports:
+  #     - 5601:5601
